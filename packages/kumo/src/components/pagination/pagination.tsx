@@ -80,12 +80,16 @@ export function Pagination({
 
   return (
     <div className="flex items-center justify-between gap-2">
-      <div className="grow text-sm text-kumo-strong">
+      <div
+        role="status"
+        aria-live="polite"
+        className="grow text-sm text-kumo-strong"
+      >
         {totalCount && totalCount > 0
           ? `Showing ${pageShowingRange} of ${totalCount}`
           : null}
       </div>
-      <div>
+      <nav aria-label="Pagination">
         <InputGroup focusMode="individual">
           {controls === "full" && (
             <InputGroup.Button
@@ -155,7 +159,7 @@ export function Pagination({
             </InputGroup.Button>
           )}
         </InputGroup>
-      </div>
+      </nav>
     </div>
   );
 }
