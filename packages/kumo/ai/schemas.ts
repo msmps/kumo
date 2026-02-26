@@ -117,9 +117,11 @@ export const BadgePropsSchema = z.object({
 });
 
 export const BannerPropsSchema = z.object({
-  icon: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Icon element rendered before the banner text (e.g. from `@phosphor-icons/react`).
+  icon: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Icon element rendered before the banner content (e.g. from `@phosphor-icons/react`).
+  title: z.string().optional(), // Primary heading text for the banner. Use for i18n string injection.
+  description: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Secondary description text displayed below the title. Use for i18n string injection.
   text: z.string().optional(),
-  children: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Banner message content. Accepts strings or custom React elements.
+  children: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(),
   variant: z.enum(["default", "alert", "error"]).optional(), // Visual style of the banner. - `"default"` — Informational blue banner for general messages - `"alert"` — Warning yellow banner for cautionary messages - `"error"` — Error red banner for critical issues
   className: z.string().optional(), // Additional CSS classes merged via `cn()`.
 });
@@ -165,6 +167,8 @@ export const ClipboardTextPropsSchema = z.object({
   size: z.enum(["sm", "base", "lg"]).optional(), // Size of the clipboard text field. - `"sm"` — Small clipboard text for compact UIs - `"base"` — Default clipboard text size - `"lg"` — Large clipboard text for prominent display
   text: z.string(), // The text to display and copy to clipboard.
   className: z.string().optional(), // Additional CSS classes merged via `cn()`.
+  tooltip: z.unknown().optional(), // Tooltip config. Shows tooltip on hover, anchored toast on click.
+  labels: z.unknown().optional(), // Accessible labels for i18n.
 });
 
 export const CloudflareLogoPropsSchema = z.object({
@@ -460,6 +464,11 @@ export const CommandPalettePropsSchema = z.object({
   children: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Child content - typically one or more Panel components
 });
 
+export const DatePickerPropsSchema = z.object({
+  className: z.string().optional(), // Additional CSS classes
+  children: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Child elements
+});
+
 export const DateRangePickerPropsSchema = z.object({
   size: z.enum(["sm", "base", "lg"]).optional(), // Calendar size. - `"sm"` — Compact calendar for tight spaces - `"base"` — Default calendar size - `"lg"` — Large calendar for prominent date selection
   variant: z.enum(["default", "subtle"]).optional(), // Visual variant. - `"default"` — Standard appearance with overlay background - `"subtle"` — Minimal background
@@ -578,11 +587,14 @@ export const MeterPropsSchema = z.object({
 });
 
 export const PaginationPropsSchema = z.object({
-  controls: z.enum(["full", "simple"]).optional(),
   setPage: z.unknown(), // Callback when page changes
   page: z.number().optional(), // Current page number (1-indexed).
   perPage: z.number().optional(), // Number of items displayed per page.
   totalCount: z.number().optional(), // Total number of items across all pages.
+  className: z.string().optional(), // Additional CSS classes for the container
+  children: z.union([z.string(), z.number(), z.boolean(), z.null(), DynamicValueSchema]).optional(), // Compound component children for custom layouts. Use Pagination.Info, Pagination.PageSize, Pagination.Controls, and Pagination.Separator.
+  controls: z.enum(["full", "simple"]).optional(),
+  text: z.unknown().optional(),
 });
 
 export const PopoverPropsSchema = z.object({
@@ -719,7 +731,7 @@ export const TooltipPropsSchema = z.object({
 /**
  * All valid component type names
  */
-export type KumoComponentType = "Badge" | "Banner" | "Breadcrumbs" | "Button" | "Checkbox" | "ClipboardText" | "CloudflareLogo" | "Code" | "Collapsible" | "Combobox" | "CommandPalette" | "DateRangePicker" | "Dialog" | "DropdownMenu" | "Empty" | "Field" | "Grid" | "Input" | "InputArea" | "Label" | "LayerCard" | "Link" | "Loader" | "MenuBar" | "Meter" | "Pagination" | "Popover" | "Radio" | "Select" | "SensitiveInput" | "Surface" | "Switch" | "Table" | "Tabs" | "Text" | "Toasty" | "Tooltip";
+export type KumoComponentType = "Badge" | "Banner" | "Breadcrumbs" | "Button" | "Checkbox" | "ClipboardText" | "CloudflareLogo" | "Code" | "Collapsible" | "Combobox" | "CommandPalette" | "DatePicker" | "DateRangePicker" | "Dialog" | "DropdownMenu" | "Empty" | "Field" | "Grid" | "Input" | "InputArea" | "Label" | "LayerCard" | "Link" | "Loader" | "MenuBar" | "Meter" | "Pagination" | "Popover" | "Radio" | "Select" | "SensitiveInput" | "Surface" | "Switch" | "Table" | "Tabs" | "Text" | "Toasty" | "Tooltip";
 
 export const KumoComponentTypeSchema = z.enum([
   "Badge",
@@ -733,6 +745,7 @@ export const KumoComponentTypeSchema = z.enum([
   "Collapsible",
   "Combobox",
   "CommandPalette",
+  "DatePicker",
   "DateRangePicker",
   "Dialog",
   "DropdownMenu",
@@ -776,6 +789,7 @@ export const ComponentPropsSchemas = {
   Collapsible: CollapsiblePropsSchema,
   Combobox: ComboboxPropsSchema,
   CommandPalette: CommandPalettePropsSchema,
+  DatePicker: DatePickerPropsSchema,
   DateRangePicker: DateRangePickerPropsSchema,
   Dialog: DialogPropsSchema,
   DropdownMenu: DropdownMenuPropsSchema,
@@ -858,4 +872,4 @@ export function validateUITree(tree: unknown): SafeParseResult<UITree> {
 /**
  * List of all component names (for catalog generation)
  */
-export const KUMO_COMPONENT_NAMES = ["Badge", "Banner", "Breadcrumbs", "Button", "Checkbox", "ClipboardText", "CloudflareLogo", "Code", "Collapsible", "Combobox", "CommandPalette", "DateRangePicker", "Dialog", "DropdownMenu", "Empty", "Field", "Grid", "Input", "InputArea", "Label", "LayerCard", "Link", "Loader", "MenuBar", "Meter", "Pagination", "Popover", "Radio", "Select", "SensitiveInput", "Surface", "Switch", "Table", "Tabs", "Text", "Toasty", "Tooltip"] as const;
+export const KUMO_COMPONENT_NAMES = ["Badge", "Banner", "Breadcrumbs", "Button", "Checkbox", "ClipboardText", "CloudflareLogo", "Code", "Collapsible", "Combobox", "CommandPalette", "DatePicker", "DateRangePicker", "Dialog", "DropdownMenu", "Empty", "Field", "Grid", "Input", "InputArea", "Label", "LayerCard", "Link", "Loader", "MenuBar", "Meter", "Pagination", "Popover", "Radio", "Select", "SensitiveInput", "Surface", "Switch", "Table", "Tabs", "Text", "Toasty", "Tooltip"] as const;
