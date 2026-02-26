@@ -8,7 +8,7 @@ import {
   CodeBlock,
   Collapsible,
   Combobox,
-  DateRangePicker,
+  DatePicker,
   Dialog,
   DropdownMenu,
   Grid,
@@ -57,7 +57,7 @@ const componentRoutes: Record<string, string> = {
   collapsible: "/components/collapsible",
   combobox: "/components/combobox",
   "command-palette": "/components/command-palette",
-  "date-range-picker": "/components/date-range-picker",
+  "date-picker": "/components/date-picker",
   dialog: "/components/dialog",
   dropdown: "/components/dropdown",
   empty: "/components/empty",
@@ -67,7 +67,7 @@ const componentRoutes: Record<string, string> = {
   label: "/components/label",
   "layer-card": "/components/layer-card",
   loader: "/components/loader",
-  menubar: "/components/menubar",
+  menubar: "/components/menu-bar",
   meter: "/components/meter",
   pagination: "/components/pagination",
   popover: "/components/popover",
@@ -104,6 +104,9 @@ function ToastTriggerButton() {
 export function HomeGrid() {
   const [switchToggled, setSwitchToggled] = useState(true);
   const [checked, setChecked] = useState(true);
+  const [value, setValue] = useState<{ id: string; value: string } | null>(
+    null,
+  );
 
   const components: Array<{
     name: string;
@@ -167,6 +170,8 @@ export function HomeGrid() {
             { id: "help-wanted", value: "help wanted" },
             { id: "good-first-issue", value: "good first issue" },
           ]}
+          onValueChange={setValue}
+          value={value}
         >
           <Combobox.TriggerInput placeholder="Select an issue..." />
           <Combobox.Content>
@@ -409,14 +414,11 @@ export function HomeGrid() {
       ),
     },
     {
-      name: "DateRangePicker",
-      id: "date-range-picker",
+      name: "DatePicker",
+      id: "date-picker",
       Component: (
         <div className="scale-90">
-          <DateRangePicker
-            onStartDateChange={() => {}}
-            onEndDateChange={() => {}}
-          />
+          <DatePicker mode="single" />
         </div>
       ),
     },

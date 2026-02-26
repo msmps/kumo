@@ -183,7 +183,12 @@ export default defineConfig(({ mode }) => {
             __dirname,
             "src/components/cloudflare-logo/index.ts",
           ),
-          // PLOP_INJECT_COMPONENT_ENTRY
+          "components/date-picker": resolve(
+            __dirname,
+            "src/components/date-picker/index.ts",
+          ),
+          'components/flow': resolve(__dirname, 'src/components/flow/index.ts'),
+        // PLOP_INJECT_COMPONENT_ENTRY
           // Utils entry point
           utils: resolve(__dirname, "src/utils/index.ts"),
           // Primitives entry point (base-ui re-exports)
